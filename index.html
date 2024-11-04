@@ -36,13 +36,17 @@
           });
           return `${baseUrls.ios}?${iosParams.toString()}`;
         } else {
-          // Android uses standard UTM parameters
-          const androidParams = new URLSearchParams({
+          // Android uses referrer parameter
+          const referrerParams = new URLSearchParams({
             utm_source: params.utm_source,
             utm_medium: params.utm_medium,
             utm_campaign: params.utm_campaign,
           });
-          return `${baseUrls.android}?${androidParams.toString()}`;
+
+          // Encode the referrer parameters
+          const encodedReferrer = encodeURIComponent(referrerParams.toString());
+
+          return `${baseUrls.android}&referrer=${encodedReferrer}`;
         }
       }
 
