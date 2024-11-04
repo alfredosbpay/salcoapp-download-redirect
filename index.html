@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App Download Redirect</title>
+  </head>
+  <body>
+    <script>
+      // Function to get URL parameters
+      function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          utm_source: params.get("utm_source") || "",
+          utm_medium: params.get("utm_medium") || "",
+          utm_campaign: params.get("utm_campaign") || "",
+        };
+      }
+
+      // Function to build store URLs with campaign parameters
+      function buildStoreUrl(platform) {
+        const params = getUrlParams();
+
+        // Base store URLs - replace with your actual app IDs
+        const baseUrls = {
+          ios: "https://apps.apple.com/cl/app/salcobrand/id1481885827",
+          android: "https://play.google.com/store/apps/details?id=cl.narki.sbpay",
+        };
+
+        if (platform === "ios") {
+          // iOS uses pt (source), ct (medium), mt (campaign)
+          const iosParams = new URLSearchParams({
+            pt: params.utm_source,
+            ct: params.utm_medium,
+            mt: params.utm_campaign,
+          });
+          return `${baseUrls.ios}?${iosParams.toString()}`;
+        } else {
+          // Android uses standard UTM parameters
+          const androidParams = new URLSearchParams({
+            utm_source: params.utm_source,
+            utm_medium: params.utm_medium,
+            utm_campaign: params.utm_campaign,
+          });
+          return `${baseUrls.android}?${androidParams.toString()}`;
+        }
+      }
+
+      // Detect device type
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const isAndroid = /Android/.test(navigator.userAgent);
+
+      // Build appropriate URL and redirect
+      if (isIOS) {
+        window.location.href = buildStoreUrl("ios");
+      } else if (isAndroid) {
+        window.location.href = buildStoreUrl("android");
+      } else {
+        // Handle desktop or unsupported devices
+        const iosUrl = buildStoreUrl("ios");
+        const androidUrl = buildStoreUrl("android");
+
+        document.write(
+          "Please visit on a mobile device or choose your platform: <br>" +
+            `<a href="${iosUrl}">iOS App</a> | ` +
+            `<a href="${androidUrl}">Android App</a><br><br>` +
+            "Current UTM Parameters:<br>" +
+            `Source: ${getUrlParams().utm_source}<br>` +
+            `Medium: ${getUrlParams().utm_medium}<br>` +
+            `Campaign: ${getUrlParams().utm_campaign}`
+        );
+      }
+    </script>
+  </body>
+</html>
