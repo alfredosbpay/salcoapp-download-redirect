@@ -74,6 +74,37 @@
             `Campaign: ${getUrlParams().utm_campaign}`
         );
       }
+
+      // Function to generate URL with UTM parameters
+      function generateUrl() {
+        const utmSource = document.getElementById("utm_source").value;
+        const utmMedium = document.getElementById("utm_medium").value;
+        const utmCampaign = document.getElementById("utm_campaign").value;
+
+        const baseUrl = window.location.origin + window.location.pathname;
+        const urlParams = new URLSearchParams({
+          utm_source: utmSource,
+          utm_medium: utmMedium,
+          utm_campaign: utmCampaign,
+        });
+
+        const finalUrl = `${baseUrl}?${urlParams.toString()}`;
+        document.getElementById("generated_url").textContent = finalUrl;
+        document.getElementById("generated_url").href = finalUrl;
+      }
     </script>
+
+    <div>
+      <h3>Generar URL con parámetros UTM</h3>
+      <label for="utm_source">UTM Fuente:</label>
+      <input type="text" id="utm_source" name="utm_source" /><br />
+      <label for="utm_medium">UTM Medio:</label>
+      <input type="text" id="utm_medium" name="utm_medium" /><br />
+      <label for="utm_campaign">UTM Campaña:</label>
+      <input type="text" id="utm_campaign" name="utm_campaign" /><br />
+      <button onclick="generateUrl()">Generar URL</button>
+      <p>URL generada:</p>
+      <a id="generated_url" target="_blank"></a>
+    </div>
   </body>
 </html>
